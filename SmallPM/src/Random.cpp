@@ -53,28 +53,40 @@ int random_int(int min, int max)
     return (max - min) * distr(gen) + min;
 }
 
+#define CDF
+// #define ARCHIMEDES
+// #define REJECTION
+// #define REJECTION_JENSEN
+
+#if defined(CDF)
 Vector3 uniform_sphere_sample()
 {
     // Utilizando la Inverse CDF (sampleo por el ángulo sólido)
 
-    float inclination = acosf(2 * random_real() - 1); // theta
-    // float inclination = M_2_PI * random_real();           // theta
-    float azimuth = 2 * M_PI * random_real(); // phi
+    // Real inclination = M_PI * random_real(); // theta
+    // Real inclination = acosf(2 * random_real() - 1); // theta
+    // Real inclination = acosf(sqrtf(random_real())); // theta
+
+    Real inclination = acosf(random_real()); // theta
+    Real azimuth = 2 * M_PI * random_real(); // phi
 
     // return Vector3(sinf(inclination) * sinf(azimuth), sinf(inclination) * cosf(azimuth), cosf(inclination));
     return Vector3(sinf(inclination) * cosf(azimuth), sinf(inclination) * sinf(azimuth), cosf(inclination));
 }
 
-Vector3 __uniform_sphere_sample()
+#elif defined(ARCHIMEDES)
+Vector3 uniform_sphere_sample()
 {
     // Utilizando el teorema de arquímedes
-    float theta = 2 * M_PI * random_real();
-    float z = random_real();
-    float x = sqrtf(1 - z * z) * cosf(theta);
-    float y = sqrtf(1 - z * z) * sinf(theta);
+    Real theta = 2 * M_PI * random_real();
+    Real z = random_real();
+    Real x = sqrtf(1 - z * z) * cosf(theta);
+    Real y = sqrtf(1 - z * z) * sinf(theta);
+    return Vector3(x, y, z);
 }
 
-Vector3 _uniform_sphere_sample()
+#elif defined(REJECTION)
+Vector3 uniform_sphere_sample()
 {
     Real x, y, z;
     do
@@ -82,6 +94,24 @@ Vector3 _uniform_sphere_sample()
         x = random_real(-1, 1);
         y = random_real(-1, 1);
         z = random_real(-1, 1);
-    } while (pow(x, 2) + pow(y, 2) + pow(z, 2) > 1);
+        // } while (pow(x, 2) + pow(y, 2) + pow(z, 2) > 1);
+    } while (x * x + y * y + z * z > 1);
     return Vector3(x, y, z);
 }
+
+#elif defined(REJECTION_JENSEN)
+Vector3 uniform_sphere_sample()
+{
+    float x, y, z;
+    do
+    {
+        // Esto es lo mismo que hace random_real sobrecargada
+        x = 2 * random_real() - 1;
+        y = 2 * random_real() - 1;
+        z = 2 * random_real() - 1;
+    } while (x * x + y * y + z * z > 1);
+
+    return Vector3(x, y, z);
+}
+
+#endif
