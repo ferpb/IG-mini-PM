@@ -30,5 +30,7 @@
 *.app
 
 
+.DS_Store
+
 Ux/smallpm
 Ux/*.hdr
