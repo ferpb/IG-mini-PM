@@ -53,10 +53,11 @@ int main(int argc, char *argv[])
 
     unsigned int photons_global = 10000,
                  photons_caustic = 10000,
+                 photons_volume = 10000,
                  max_shots = 100000,
                  nb_nearest_photons = 10;
 
-    bool raytraced_direct = false;
+    bool raytraced_direct = false, foggy = false;
 
     // ---------------------------------------------------------------------
     // Parse input
@@ -99,6 +100,11 @@ int main(int argc, char *argv[])
             ++i;
             photons_caustic = atoi(argv[i]);
         }
+        if (!strcmp("-pm-photons-volume", argv[i]))
+        {
+            ++i;
+            photons_volume = atoi(argv[i]);
+        }
         if (!strcmp("-pm-max-photons-shot", argv[i]))
         {
             ++i;
@@ -112,6 +118,10 @@ int main(int argc, char *argv[])
         if (!strcmp("-pm-raytraced-direct", argv[i]))
         {
             raytraced_direct = true;
+        }
+        if (!strcmp("-volumetric", argv[i]))
+        {
+            foggy = true;
         }
     }
 
@@ -139,6 +149,7 @@ int main(int argc, char *argv[])
     BSDF *white = new Lambertian(w, Vector3(.85, .85, .85));
     BSDF *red = new Lambertian(w, Vector3(.85, .085, .085));
     BSDF *green = new Lambertian(w, Vector3(.085, .85, .085));
+    BSDF *orange = new Lambertian(w, Vector3(.85, .6, .02));
 
     Triangle *floor1 = new Triangle(Vector3(-1.5, 0, 1.5), Vector3(1.5, 0., 1.5),
                                     Vector3(-1.5, 0., -1.5), white);
@@ -207,6 +218,36 @@ int main(int argc, char *argv[])
         w->add_object(bunny);
     }
     break;
+    case 4:
+    {
+
+        Object3D *sphere1 = new Sphere(Vector3(0, 0.8, 0), 0.6, glass);
+        w->add_object(sphere1);
+        Object3D *sphere2 = new Sphere(Vector3(0, 0.8, 0), 0.3, orange);
+        w->add_object(sphere2);
+    }
+    break;
+    case 5:
+    {
+
+        Object3D *sphere1 = new Sphere(Vector3(0, 1.25, 0), 0.3, glass);
+        w->add_object(sphere1);
+    }
+    break;
+    case 6:
+    {
+        Object3D *sphere1 = new Sphere(Vector3(0.5, 0.3, .5), 0.3, glass);
+        w->add_object(sphere1);
+
+        Object3D *sphere2 = new Sphere(Vector3(-0.5, 0.5, .5), 0.3, mirror);
+        w->add_object(sphere2);
+
+        LightSource *ls = new PointLightSource(w, Vector3(0.5, 1.9, .5), Vector3(15, 15, 15));
+        w->add_light(ls);
+        LightSource *ls2 = new PointLightSource(w, Vector3(-0.5, 1.9, .5), Vector3(5, 5, 5));
+        w->add_light(ls2);
+    }
+    break;
     default:
     {
         Object3D *sphere1 = new Sphere(Vector3(0.5, 0.3, .5), 0.3, white);
@@ -224,7 +265,7 @@ int main(int argc, char *argv[])
     // Create Film and rendering engine
     //
     film = new Film(sizex, sizey);
-    pm = new PhotonMapping(w, photons_global, photons_caustic, max_shots, nb_nearest_photons, raytraced_direct);
+    pm = new PhotonMapping(w, photons_global, photons_caustic, photons_volume, max_shots, nb_nearest_photons, raytraced_direct, NORMAL, foggy);
     engine = new RenderEngine(w, film, &camera, pm);
 
     engine->render(name_file);

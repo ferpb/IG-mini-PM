@@ -12,6 +12,7 @@ This software is provided as is, and any express or implied warranties are discl
 In no event shall copyright holders be liable for any damage.
 **********************************************************************************/
 
+#include <cstdlib>
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -37,7 +38,7 @@ const Vector3 RenderEngine::trace_ray(const Vector2 &pi)
     // Get the ray's first intersection in the scene (if exists)
     if (it.did_hit())
     {
-        return photon_mapping->shade(it);
+        return photon_mapping->shade(r, it);
     }
     else
         // ... or return background's color if the ray does not intersect.
@@ -86,11 +87,18 @@ void RenderEngine::render(const std::string &name)
 
     // ----------------------------------------------------------------------
     //Raytrace all samples in the image
+    int count = 0;
+    std::cout << "total: " << film->get_height() * film->get_width() << std::endl;
+    std::cout << "h: " << film->get_height() << std::endl;
+    std::cout << "w: " << film->get_width() << std::endl;
 
     //for all pixels...
     //trace a ray on each pixel (see function 'RenderEngine::trace_ray()')
     for (int y = 0; y < film->get_height(); ++y)
     {
+        count++;
+        std::cout << count << std::endl;
+
         if (!(y % 10))
         {
             Real secs = timer.get_secs();

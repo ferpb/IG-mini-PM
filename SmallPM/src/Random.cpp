@@ -52,13 +52,15 @@ int random_int(int min, int max)
 {
     return (max - min) * distr(gen) + min;
 }
-
+/*
 #define CDF
 // #define ARCHIMEDES
 // #define REJECTION
 // #define REJECTION_JENSEN
 
 #if defined(CDF)
+*/
+
 Vector3 uniform_sphere_sample()
 {
     // Utilizando la Inverse CDF (sampleo por el ángulo sólido)
@@ -66,14 +68,17 @@ Vector3 uniform_sphere_sample()
     // Real inclination = M_PI * random_real(); // theta
     // Real inclination = acosf(2 * random_real() - 1); // theta
     // Real inclination = acosf(sqrtf(random_real())); // theta
+    Real a = -1.0f;
+    Real b = 1.0f;
 
-    Real inclination = acosf(random_real()); // theta
+    Real inclination = acosf(random_real(-1, 1)); // theta
+    //Real inclination = acosf(random_real()); // theta
     Real azimuth = 2 * M_PI * random_real(); // phi
 
     // return Vector3(sinf(inclination) * sinf(azimuth), sinf(inclination) * cosf(azimuth), cosf(inclination));
     return Vector3(sinf(inclination) * cosf(azimuth), sinf(inclination) * sinf(azimuth), cosf(inclination));
 }
-
+/*
 #elif defined(ARCHIMEDES)
 Vector3 uniform_sphere_sample()
 {
@@ -115,3 +120,18 @@ Vector3 uniform_sphere_sample()
 }
 
 #endif
+*/
+/*
+Vector3 uniform_sphere_sample()
+{
+    Real x, y, z;
+    do
+    {
+        x = random_real(-1, 1);
+        y = random_real(-1, 1);
+        z = random_real(-1, 1);
+        // } while (pow(x, 2) + pow(y, 2) + pow(z, 2) > 1);
+    } while (x * x + y * y + z * z > 1);
+    return Vector3(x, y, z);
+}
+*/
