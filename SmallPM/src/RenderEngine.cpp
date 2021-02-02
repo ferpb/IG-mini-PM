@@ -97,7 +97,7 @@ void RenderEngine::render(const std::string &name)
     for (int y = 0; y < film->get_height(); ++y)
     {
         count++;
-        std::cout << count << std::endl;
+        //std::cout << count << std::endl;
 
         if (!(y % 10))
         {

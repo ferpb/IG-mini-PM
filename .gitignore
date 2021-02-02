@@ -34,3 +34,5 @@
 
 Ux/smallpm
 Ux/*.hdr
+*.hdr
+*.png

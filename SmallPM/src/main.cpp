@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         if (!strcmp("-pm-total-photons", argv[i]))
         {
             ++i;
-            photons_global = photons_caustic = atoi(argv[i]);
+            photons_volume = photons_global = photons_caustic = atoi(argv[i]);
         }
         if (!strcmp("-pm-photons-global", argv[i]))
         {

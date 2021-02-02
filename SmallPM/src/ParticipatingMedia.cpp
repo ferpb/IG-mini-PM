@@ -64,7 +64,7 @@ Vector3 fog_ray_marching(const Vector3 &direction, const Vector3 &origin, const 
     }
     return Ld;
 }
-
+/*
 Vector3 fog_ray_marching_probs(const Vector3 &direction, const Vector3 &origin, const Real ray_length, int nb_volumen_photons, const KDTree<Photon, 3> &m_volumen_photones, std::vector<int> shots_per_light_volumen)
 {
 
@@ -101,7 +101,7 @@ Vector3 fog_ray_marching_probs(const Vector3 &direction, const Vector3 &origin, 
         }
     }
     return Ld;
-}
+}*/
 
 Vector3 fog_ray_marching_probs2(const Vector3 &direction, const Vector3 &origin, const Real ray_length, int nb_volumen_photons, const KDTree<Photon, 3> &m_volumen_photones, std::vector<int> shots_per_light_volumen)
 {
@@ -129,8 +129,6 @@ Vector3 fog_ray_marching_probs2(const Vector3 &direction, const Vector3 &origin,
             }
             Li *= (1.0f / (4.0f * M_PI)) * (3.0f / (4.0f * M_PI * radius * radius * radius));
             Li *= (sigma_s / sigma_t);
-
-            //Ld = Ld * exp(-length_t * sigma_t) + sigma_s * length_t * Li;
 
             Ld = Ld * exp(-length_t * sigma_t) + sigma_s * Li * length_t;
             length_t = -1 * (log(random_real(1e-10, 1.0 - 1e-10)) / sigma_t);
