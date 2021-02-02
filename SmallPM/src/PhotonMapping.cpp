@@ -124,7 +124,7 @@ bool PhotonMapping::trace_ray(const Ray &r, const Vector3 &p,
             }
             else
             {
-                //std::cout << "entro" << std::endl;
+
                 //If non-caustic particle, store in global
                 if (global_photons.size() < m_nb_global_photons)
                     global_photons.push_back(Photon(it.get_position(), photon_ray.get_direction(), energy, num_light));
@@ -354,7 +354,7 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
 
     if (foggy)
     {
-        //std::cout << "distancia total: " << total_distance << std::endl;
+
         return L_fog + attenuation(total_distance, L_global + L_causticas + L_direct);
     }
     else
