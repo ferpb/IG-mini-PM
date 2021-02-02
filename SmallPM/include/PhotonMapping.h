@@ -123,6 +123,8 @@ class PhotonMapping
     Vector3 Estimacion(Vector3 interesec_point, const KDTree<Photon, 3> &photon_map, int nb_photons, std::vector<int> photons_per_light) const;
     Vector3 Direct_light_NEE(const Intersection &it) const;
     Vector3 Direc_light_RR(const Intersection &it) const;
+
+    void plot_photons(list<Photon> l, std::string file);
 };
 
 vector<Real> vector3_to_vector(const Vector3 &v);

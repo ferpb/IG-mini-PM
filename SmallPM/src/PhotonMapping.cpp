@@ -24,6 +24,7 @@ In no event shall copyright holders be liable for any damage.
 #include <cstdlib>
 #include <iostream>
 #include <ostream>
+#include <fstream>
 #include <vector>
 
 vector<Real> vector3_to_vector(const Vector3 &v)
@@ -214,7 +215,20 @@ void PhotonMapping::preprocess()
     // luego cada fotón tendrá una posción de esa energía.
     // Pero no se si este cálculo bien
 
-    //std::cout << global_photons.size() << std::endl;
+    /*
+    plot_photons(global_photons, "maps/global");
+    plot_photons(caustic_photons, "maps/caustic");
+    plot_photons(volumen_photones, "maps/volume");
+
+    std::list<Photon> global_caustic_photons = global_photons;
+    global_caustic_photons.insert(global_caustic_photons.end(), caustic_photons.begin(), caustic_photons.end());
+    plot_photons(global_caustic_photons, "maps/global_caustic");
+
+    std::list<Photon> all_photons = global_photons;
+    all_photons.insert(all_photons.end(), caustic_photons.begin(), caustic_photons.end());
+    all_photons.insert(all_photons.end(), volumen_photones.begin(), volumen_photones.end());
+    plot_photons(all_photons, "maps/all");
+    */
 
     // Store the photons in the kd-trees
     m_global_map.clear();
@@ -260,7 +274,6 @@ void PhotonMapping::preprocess()
     }
 
     std::cout << "Emission finished" << std::endl;
-    //exit(1);
 }
 
 //*********************************************************************
@@ -280,12 +293,8 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
     Intersection it(it0);
     Vector3 L_global(0), L_causticas(0), L_direct(0), L_fog(0);
     Real total_distance = ray.get_parameter();
-    //std::cout << "distancia: " << total_distance << std::endl;
-    // Ray reflected_ray(it.get_ray());
-    // reflected_ray.shift();
 
     Vector3 W(1);
-    // Antes de llamar a shade se comprueba it.did_hit()
 
     int bounces = 0;
     // Si el material es delta, hay que ir siguiendo un camino hasta llegar a un material difuso
@@ -293,7 +302,7 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
     {
 
         // La pdf no se usa en materiales delta
-        Real pdf; // Not used
+        Real pdf;
         it.intersected()->material()->get_outgoing_sample_ray(it, ray, pdf);
         total_distance += ray.get_parameter();
         if (!it.did_hit())
@@ -304,24 +313,6 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
         ray.shift();
         world->first_intersection(ray, it);
 
-        //std::cout << "********************************************" << total_distance << std::endl;
-        //std::cout << "distancia: " << total_distance << std::endl;
-
-        // Pensar cuantas repeticiones máximo se puede hacer de esto
-
-        // Ruleta rusa para salir de bucle
-        // Esto se podría poner mejor, para que se haga igual que en trace_ray (límite de 20 y no se que)
-        // float rand = random_real();
-        // std::cout << rand << std::endl;
-        // std::cout << reflected_ray.get_level() << std::endl;
-        // Vector3 surf_albedo = it.intersected()->material()->get_albedo(it);
-        // Real avg_surf_albedo = surf_albedo.avg();
-
-        // if (random_real() > avg_surf_albedo || reflected_ray.get_level() > 20 || iteraciones > 20)
-        // {
-        // 	// std::cout << "iteraciones " << iteraciones << " " << rand << std::endl;
-        // 	break;
-        // }
         bounces++;
     }
 
@@ -339,11 +330,8 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
 
     if (m_raytraced_direct)
     {
-        // Hay que calcular la iluminación directa con ray tracing
         // Hacer next event estimation.
-        //std::cout << "entro" << std::endl;
         L_direct = Direc_light_RR(it);
-        //L_direct = Direc_light_NEE(const Intersection &it);
     }
 
     // Estimación de radiancia con los mapas de fotones
@@ -471,6 +459,7 @@ Vector3 PhotonMapping::Direct_light_NEE(const Intersection &it) const
     }
     return L_direct;
 }
+
 Vector3 PhotonMapping::Direc_light_RR(const Intersection &it) const
 {
     Vector3 L_direct(0);
@@ -495,4 +484,17 @@ Vector3 PhotonMapping::Direc_light_RR(const Intersection &it) const
     }
 
     return L_direct;
+}
+
+void PhotonMapping::plot_photons(list<Photon> l, std::string file)
+{
+    std::ofstream of(file + ".csv");
+    for (auto photon : l)
+    {
+
+        of << photon.position.getComponent(0) << ", "
+           << photon.position.getComponent(1) << ", "
+           << photon.position.getComponent(2)
+           << std::endl;
+    }
 }

@@ -52,14 +52,6 @@ int random_int(int min, int max)
 {
     return (max - min) * distr(gen) + min;
 }
-/*
-#define CDF
-// #define ARCHIMEDES
-// #define REJECTION
-// #define REJECTION_JENSEN
-
-#if defined(CDF)
-*/
 
 Vector3 uniform_sphere_sample()
 {
@@ -78,6 +70,16 @@ Vector3 uniform_sphere_sample()
     // return Vector3(sinf(inclination) * sinf(azimuth), sinf(inclination) * cosf(azimuth), cosf(inclination));
     return Vector3(sinf(inclination) * cosf(azimuth), sinf(inclination) * sinf(azimuth), cosf(inclination));
 }
+
+/*
+#define CDF
+// #define ARCHIMEDES
+// #define REJECTION
+// #define REJECTION_JENSEN
+
+#if defined(CDF)
+*/
+
 /*
 #elif defined(ARCHIMEDES)
 Vector3 uniform_sphere_sample()
