@@ -331,13 +331,13 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
     if (m_raytraced_direct)
     {
         // Hacer next event estimation.
-        L_direct = Direc_light_RR(it);
+        L_direct = Direct_light_RR(it);
     }
 
     // Estimación de radiancia con los mapas de fotones
-    L_global = Estimacion(it_position, m_global_map, m_nb_photons, shots_per_light);
+    L_global = Estimation(it_position, m_global_map, m_nb_photons, shots_per_light);
     L_global = L_global * (it_albedo / M_PI);
-    L_causticas = Estimacion(it_position, m_caustics_map, m_nb_photons, shots_per_light);
+    L_causticas = Estimation(it_position, m_caustics_map, m_nb_photons, shots_per_light);
     L_causticas = L_causticas * (it_albedo / M_PI);
 
     if (foggy)
@@ -352,7 +352,7 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
     }
 }
 
-Vector3 PhotonMapping::Estimacion(Vector3 interesec_point, const KDTree<Photon, 3> &photon_map, int nb_photons, std::vector<int> photons_per_light) const
+Vector3 PhotonMapping::Estimation(Vector3 interesec_point, const KDTree<Photon, 3> &photon_map, int nb_photons, std::vector<int> photons_per_light) const
 {
     Vector3 L(0);
     Real radius;
@@ -460,7 +460,7 @@ Vector3 PhotonMapping::Direct_light_NEE(const Intersection &it) const
     return L_direct;
 }
 
-Vector3 PhotonMapping::Direc_light_RR(const Intersection &it) const
+Vector3 PhotonMapping::Direct_light_RR(const Intersection &it) const
 {
     Vector3 L_direct(0);
     Vector3 it_position = it.get_position();

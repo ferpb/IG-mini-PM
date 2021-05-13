@@ -120,9 +120,9 @@ class PhotonMapping
     // radiance.
     Vector3 shade(Ray ray, Intersection &it0) const;
     int Russian_roulette() const;
-    Vector3 Estimacion(Vector3 interesec_point, const KDTree<Photon, 3> &photon_map, int nb_photons, std::vector<int> photons_per_light) const;
+    Vector3 Estimation(Vector3 interesec_point, const KDTree<Photon, 3> &photon_map, int nb_photons, std::vector<int> photons_per_light) const;
     Vector3 Direct_light_NEE(const Intersection &it) const;
-    Vector3 Direc_light_RR(const Intersection &it) const;
+    Vector3 Direct_light_RR(const Intersection &it) const;
 
     void plot_photons(list<Photon> l, std::string file);
 };

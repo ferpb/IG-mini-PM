@@ -30,33 +30,29 @@ In no event shall copyright holders be liable for any damage.
 		the camera and the film (unto which pixels are drawn). */
 class RenderEngine
 {
-	/// World (containing all objects and lights),
-	World *world;
-	
-	/// Film (unto which pixels are drawn).
-	Film* film;
+    /// World (containing all objects and lights),
+    World *world;
 
-	/// Viewing information.
-	Camera* camera;
+    /// Film (unto which pixels are drawn).
+    Film *film;
 
-	// Photon Mapping Integrator
-	PhotonMapping *photon_mapping;
+    /// Viewing information.
+    Camera *camera;
 
-	/// Trace a single ray
-	const Vector3 trace_ray(const Vector2& pi);
-		
-public:
+    // Photon Mapping Integrator
+    PhotonMapping *photon_mapping;
 
-	/** Build engine from world information, a Film and a camera. */
- 	RenderEngine(World*  _world, Film* _film, Camera* _camera, PhotonMapping *_pm): 
- 		world(_world), film(_film), camera(_camera), photon_mapping(_pm)
-	{
-		srand((unsigned)time(0));	
-	}
-	
-	void render(const std::string& name);
+    /// Trace a single ray
+    const Vector3 trace_ray(const Vector2 &pi);
 
+  public:
+    /** Build engine from world information, a Film and a camera. */
+    RenderEngine(World *_world, Film *_film, Camera *_camera, PhotonMapping *_pm) : world(_world), film(_film), camera(_camera), photon_mapping(_pm)
+    {
+        srand((unsigned)time(0));
+    }
+
+    void render(const std::string &name);
 };
 
 #endif
-
