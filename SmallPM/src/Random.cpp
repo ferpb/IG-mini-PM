@@ -55,13 +55,11 @@ int random_int(int min, int max)
 
 Vector3 uniform_sphere_sample()
 {
-    // Utilizando la Inverse CDF (sampleo por el ángulo sólido)
-
     // Real inclination = M_PI * random_real(); // theta
     // Real inclination = acosf(2 * random_real() - 1); // theta
     // Real inclination = acosf(sqrtf(random_real())); // theta
-    Real a = -1.0f;
-    Real b = 1.0f;
+    // Real a = -1.0f;
+    // Real b = 1.0f;
 
     Real inclination = acosf(random_real(-1, 1)); // theta
     //Real inclination = acosf(random_real()); // theta

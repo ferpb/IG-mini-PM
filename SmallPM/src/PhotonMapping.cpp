@@ -297,11 +297,11 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
     Vector3 W(1);
 
     int bounces = 0;
-    // Si el material es delta, hay que ir siguiendo un camino hasta llegar a un material difuso
+    // If the material is delta, follow the path until we hit a diffuse material
     while (it.intersected()->material()->is_delta() && bounces < 20)
     {
 
-        // La pdf no se usa en materiales delta
+        // pdf is not used in delta materials
         Real pdf;
         it.intersected()->material()->get_outgoing_sample_ray(it, ray, pdf);
         total_distance += ray.get_parameter();
@@ -330,11 +330,11 @@ Vector3 PhotonMapping::shade(Ray ray, Intersection &it0) const
 
     if (m_raytraced_direct)
     {
-        // Hacer next event estimation.
+        // Perform next event estimation
         L_direct = Direct_light_RR(it);
     }
 
-    // Estimación de radiancia con los mapas de fotones
+    // Radiance estimation using the photon maps
     L_global = Estimation(it_position, m_global_map, m_nb_photons, shots_per_light);
     L_global = L_global * (it_albedo / M_PI);
     L_causticas = Estimation(it_position, m_caustics_map, m_nb_photons, shots_per_light);
